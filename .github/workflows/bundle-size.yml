@@ -23,12 +23,14 @@ jobs:
           cache: "npm"
           cache-dependency-path: "./FrontEnd/my-app/package-lock.json"
 
-      - name: Clear npm cache
-        run: npm cache clean --force
+      - name: Remove package-lock and node_modules
+        run: |
+          rm -rf ./FrontEnd/my-app/package-lock.json
+          rm -rf ./FrontEnd/my-app/node_modules
 
       - name: Install dependencies
         working-directory: ./FrontEnd/my-app
-        run: npm ci
+        run: npm install
 
       - name: Check Bundle Size Regression
         uses: preactjs/compressed-size-action@v2
