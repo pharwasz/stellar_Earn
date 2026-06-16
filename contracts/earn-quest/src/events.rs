@@ -421,3 +421,24 @@ pub fn verifier_stake_slashed(env: &Env, quest_id: Symbol, verifier: Address, sl
     let data = (slash_amount,);
     env.events().publish(topics, data);
 }
+
+/// Emitted when the minimum creator level threshold is changed.
+pub fn min_creator_level_set(env: &Env, caller: Address, level: u32) {
+    let topics = (symbol_short!("mn_cr_lvl"), caller);
+    let data = (level,);
+    env.events().publish(topics, data);
+}
+
+/// Emitted when an address is added to the creator whitelist.
+pub fn creator_whitelist_added(env: &Env, caller: Address, address: Address) {
+    let topics = (symbol_short!("cr_wl_add"), caller, address);
+    let data = ();
+    env.events().publish(topics, data);
+}
+
+/// Emitted when an address is removed from the creator whitelist.
+pub fn creator_whitelist_removed(env: &Env, caller: Address, address: Address) {
+    let topics = (symbol_short!("cr_wl_rem"), caller, address);
+    let data = ();
+    env.events().publish(topics, data);
+}

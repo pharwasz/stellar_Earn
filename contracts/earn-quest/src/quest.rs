@@ -1,5 +1,6 @@
 use crate::errors::Error;
 use crate::events;
+use crate::reputation;
 use crate::storage;
 use crate::types::{BatchQuestInput, MetadataDescription, Quest, QuestMetadata, QuestStatus, Role};
 use crate::validation;
@@ -58,6 +59,15 @@ pub fn register_quest(
     validation::validate_reward_amount(reward_amount)?;
     validation::validate_deadline(env, deadline)?;
     validation::validate_addresses_distinct(creator, verifier)?;
+
+    // Check minimum creator level requirement
+    let min_level = storage::get_min_creator_level(env);
+    if min_level > 0 && !storage::is_creator_whitelisted(env, creator) {
+        let stats = reputation::get_user_stats(env, creator);
+        if stats.level < min_level {
+            return Err(Error::InsufficientCreatorLevel);
+        }
+    }
 
     let quest = Quest {
         id: id.clone(),

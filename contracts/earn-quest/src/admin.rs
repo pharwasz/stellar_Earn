@@ -1,4 +1,5 @@
 use crate::errors::Error;
+use crate::events;
 use crate::storage;
 use crate::types::Role;
 use soroban_sdk::{Address, Env};
@@ -165,5 +166,79 @@ pub fn revoke_role(
         return Err(Error::Unauthorized);
     }
     storage::revoke_role(env, address, &role);
+    Ok(())
+}
+
+/// Sets the minimum creator level required to create quests.
+///
+/// Only a SuperAdmin can set the minimum creator level.
+/// Setting the level to 0 disables the requirement.
+///
+/// # Arguments
+///
+/// * `env` - The contract environment.
+/// * `caller` - The address of the account performing the action.
+/// * `level` - The minimum level required to create quests.
+///
+/// # Returns
+///
+/// * `Ok(())` if the minimum level is successfully set.
+/// * `Err(Error::Unauthorized)` if the caller is not a SuperAdmin.
+pub fn set_min_creator_level(env: &Env, caller: &Address, level: u32) -> Result<(), Error> {
+    caller.require_auth();
+    if !storage::is_super_admin(env, caller) {
+        return Err(Error::Unauthorized);
+    }
+    storage::set_min_creator_level(env, level);
+    events::min_creator_level_set(env, caller.clone(), level);
+    Ok(())
+}
+
+/// Adds an address to the creator whitelist, allowing them to bypass
+/// the minimum creator level requirement when creating quests.
+///
+/// Only a SuperAdmin can whitelist addresses.
+///
+/// # Arguments
+///
+/// * `env` - The contract environment.
+/// * `caller` - The address of the account performing the action.
+/// * `address` - The address to whitelist.
+///
+/// # Returns
+///
+/// * `Ok(())` if the address is successfully whitelisted.
+/// * `Err(Error::Unauthorized)` if the caller is not a SuperAdmin.
+pub fn add_creator_whitelist(env: &Env, caller: &Address, address: &Address) -> Result<(), Error> {
+    caller.require_auth();
+    if !storage::is_super_admin(env, caller) {
+        return Err(Error::Unauthorized);
+    }
+    storage::add_creator_whitelist(env, address);
+    events::creator_whitelist_added(env, caller.clone(), address.clone());
+    Ok(())
+}
+
+/// Removes an address from the creator whitelist.
+///
+/// Only a SuperAdmin can remove addresses from the whitelist.
+///
+/// # Arguments
+///
+/// * `env` - The contract environment.
+/// * `caller` - The address of the account performing the action.
+/// * `address` - The address to remove from the whitelist.
+///
+/// # Returns
+///
+/// * `Ok(())` if the address is successfully removed from the whitelist.
+/// * `Err(Error::Unauthorized)` if the caller is not a SuperAdmin.
+pub fn remove_creator_whitelist(env: &Env, caller: &Address, address: &Address) -> Result<(), Error> {
+    caller.require_auth();
+    if !storage::is_super_admin(env, caller) {
+        return Err(Error::Unauthorized);
+    }
+    storage::remove_creator_whitelist(env, address);
+    events::creator_whitelist_removed(env, caller.clone(), address.clone());
     Ok(())
 }

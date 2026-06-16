@@ -92,6 +92,10 @@ pub enum DataKey {
     BadgeType(Symbol),
     /// Index of all registered badge type ids
     BadgeTypeIds,
+    /// Minimum creator level required to create quests
+    MinCreatorLevel,
+    /// Addresses whitelisted to bypass the creator level requirement
+    CreatorWhitelist(Address),
 }
 
 //================================================================================
@@ -1299,4 +1303,43 @@ pub fn list_badge_types(env: &Env) -> Vec<BadgeType> {
         i += 1;
     }
     out
+}
+
+//================================================================================
+// Min Creator Level & Whitelist Storage
+//================================================================================
+
+pub fn get_min_creator_level(env: &Env) -> u32 {
+    env.storage()
+        .instance()
+        .get(&DataKey::MinCreatorLevel)
+        .unwrap_or(0u32)
+}
+
+pub fn set_min_creator_level(env: &Env, level: u32) {
+    if level == 0 {
+        env.storage().instance().remove(&DataKey::MinCreatorLevel);
+    } else {
+        env.storage()
+            .instance()
+            .set(&DataKey::MinCreatorLevel, &level);
+    }
+}
+
+pub fn is_creator_whitelisted(env: &Env, address: &Address) -> bool {
+    env.storage()
+        .instance()
+        .has(&DataKey::CreatorWhitelist(address.clone()))
+}
+
+pub fn add_creator_whitelist(env: &Env, address: &Address) {
+    env.storage()
+        .instance()
+        .set(&DataKey::CreatorWhitelist(address.clone()), &true);
+}
+
+pub fn remove_creator_whitelist(env: &Env, address: &Address) {
+    env.storage()
+        .instance()
+        .remove(&DataKey::CreatorWhitelist(address.clone()));
 }

@@ -149,4 +149,8 @@ pub enum Error {
     VerifierStakeNotFound = 144,
     /// Stake is no longer active (already returned or slashed).
     VerifierStakeInactive = 145,
+
+    // Creator Level Errors
+    /// Creator level is below the minimum required threshold.
+    InsufficientCreatorLevel = 146,
 }

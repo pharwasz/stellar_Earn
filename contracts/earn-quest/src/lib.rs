@@ -1328,4 +1328,41 @@ impl EarnQuestContract {
         token::set_metadata(&env, name, symbol, decimals);
         Ok(())
     }
+
+    // ─────────────────────────────────────────────────────────────────────────────
+    // Min Creator Level & Whitelist
+    // ─────────────────────────────────────────────────────────────────────────────
+
+    /// Sets the minimum creator level required to create quests (SuperAdmin only).
+    ///
+    /// # Arguments
+    ///
+    /// * `env` - The environment.
+    /// * `caller` - The address of the caller (must be SuperAdmin).
+    /// * `level` - The minimum level required. Set to 0 to disable.
+    pub fn set_min_creator_level(env: Env, caller: Address, level: u32) -> Result<(), Error> {
+        admin::set_min_creator_level(&env, &caller, level)
+    }
+
+    /// Returns the current minimum creator level threshold.
+    pub fn get_min_creator_level(env: Env) -> u32 {
+        storage::get_min_creator_level(&env)
+    }
+
+    /// Adds an address to the creator whitelist (SuperAdmin only).
+    ///
+    /// Whitelisted addresses bypass the minimum creator level requirement.
+    pub fn add_creator_whitelist(env: Env, caller: Address, address: Address) -> Result<(), Error> {
+        admin::add_creator_whitelist(&env, &caller, &address)
+    }
+
+    /// Removes an address from the creator whitelist (SuperAdmin only).
+    pub fn remove_creator_whitelist(env: Env, caller: Address, address: Address) -> Result<(), Error> {
+        admin::remove_creator_whitelist(&env, &caller, &address)
+    }
+
+    /// Checks if an address is whitelisted to bypass the creator level requirement.
+    pub fn is_creator_whitelisted(env: Env, address: Address) -> bool {
+        storage::is_creator_whitelisted(&env, &address)
+    }
 }
