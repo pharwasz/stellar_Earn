@@ -96,7 +96,7 @@ function validateTsconfigPaths(tsconfigPath) {
 
       if (aliasWildcardCount !== targetWildcardCount) {
         errors.push(
-          `Wildcard mismatch: '${aliasKey}' -> '${targetPath}'. Both must have the same number of '*'`
+          `Alias pattern mismatch: '${aliasKey}' -> '${targetPath}'. Both must have the same number of '*'`
         );
         return;
       }
@@ -106,7 +106,7 @@ function validateTsconfigPaths(tsconfigPath) {
 
       if (!existsPathCandidate(resolvedTarget)) {
         errors.push(
-          `Path alias '${aliasKey}' maps to a missing path: ${resolvedTarget}`
+          `Path alias '${aliasKey}' does not resolve to an existing file or directory: ${resolvedTarget}`
         );
       }
     });
@@ -138,7 +138,12 @@ if (require.main === module) {
   run();
 }
 
+function validatePathAliases(tsconfigPath) {
+  return validateTsconfigPaths(tsconfigPath).errors;
+}
+
 module.exports = {
   validateTsconfigPaths,
+  validatePathAliases,
   loadTsconfig,
 };
