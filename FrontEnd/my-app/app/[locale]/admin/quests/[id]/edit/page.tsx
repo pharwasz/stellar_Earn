@@ -1,5 +1,5 @@
 'use client';
-
+import Link from 'next/link';
 import { use } from 'react';
 import {
   useAdminAccess,
@@ -10,6 +10,7 @@ import { AdminLayout, QuestEditor, Notifications } from '@/components/admin';
 import { NotificationContext } from '@/lib/hooks/useAdmin';
 import { updateQuestStatus } from '@/lib/api/admin';
 import type { QuestFormData, QuestStatus } from '@/lib/types/admin';
+import Link from 'next/link';
 
 interface EditQuestContentProps {
   questId: string;
@@ -85,12 +86,12 @@ function EditQuestContent({ questId }: EditQuestContentProps) {
         <p className="mt-1 text-sm text-red-600 dark:text-red-300">
           {error || 'The requested quest could not be found.'}
         </p>
-        <a
+        <Link
           href="/admin"
           className="mt-4 inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700"
         >
           Back to Admin
-        </a>
+        </Link>
       </div>
     );
   }
@@ -100,19 +101,19 @@ function EditQuestContent({ questId }: EditQuestContentProps) {
       <div className="space-y-6">
         {/* Breadcrumb */}
         <nav className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-          <a
+          <Link
             href="/admin"
             className="hover:text-zinc-700 dark:hover:text-zinc-300"
           >
             Admin
-          </a>
+          </Link>
           <span>/</span>
-          <a
-            href="/admin"
+          <Link
+            href="/admin/quests"
             className="hover:text-zinc-700 dark:hover:text-zinc-300"
           >
             Quests
-          </a>
+          </Link>
           <span>/</span>
           <span className="text-zinc-900 dark:text-zinc-50 truncate max-w-[200px]">
             {quest.title}
@@ -175,12 +176,12 @@ export default function EditQuestPage({ params }: PageProps) {
           <p className="text-zinc-500 dark:text-zinc-400 mb-6">
             {accessError || 'You do not have permission to access this page.'}
           </p>
-          <a
+          <Link
             href="/dashboard"
             className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-700"
           >
             Return to Dashboard
-          </a>
+          </Link>
         </div>
       </div>
     );
