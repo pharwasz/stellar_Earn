@@ -29,11 +29,26 @@ pub struct GasBudgetTarget {
 /// Returns the static gas budget targets for all EarnQuest entrypoints.
 pub fn default_targets() -> [GasBudgetTarget; 5] {
     [
-        GasBudgetTarget { entrypoint: symbol_short!("init"),     max_instructions: 341_704 },
-        GasBudgetTarget { entrypoint: symbol_short!("reg_qst"),  max_instructions: 409_522 },
-        GasBudgetTarget { entrypoint: symbol_short!("sub_prf"),  max_instructions: 464_336 },
-        GasBudgetTarget { entrypoint: symbol_short!("appr_sub"), max_instructions: 526_457 },
-        GasBudgetTarget { entrypoint: symbol_short!("clm_rwd"),  max_instructions: 921_406 },
+        GasBudgetTarget {
+            entrypoint: symbol_short!("init"),
+            max_instructions: 341_704,
+        },
+        GasBudgetTarget {
+            entrypoint: symbol_short!("reg_qst"),
+            max_instructions: 409_522,
+        },
+        GasBudgetTarget {
+            entrypoint: symbol_short!("sub_prf"),
+            max_instructions: 464_336,
+        },
+        GasBudgetTarget {
+            entrypoint: symbol_short!("appr_sub"),
+            max_instructions: 526_457,
+        },
+        GasBudgetTarget {
+            entrypoint: symbol_short!("clm_rwd"),
+            max_instructions: 921_406,
+        },
     ]
 }
 

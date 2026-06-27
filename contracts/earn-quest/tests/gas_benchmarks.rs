@@ -24,7 +24,16 @@ use soroban_sdk::{
     Address, BytesN, Env, Symbol,
 };
 
-fn setup(env: &Env) -> (EarnQuestContractClient<'_>, Address, Address, Address, Address, Address) {
+fn setup(
+    env: &Env,
+) -> (
+    EarnQuestContractClient<'_>,
+    Address,
+    Address,
+    Address,
+    Address,
+    Address,
+) {
     let contract_id = env.register_contract(None, EarnQuestContract);
     let client = EarnQuestContractClient::new(env, &contract_id);
 
@@ -99,7 +108,9 @@ fn benchmark_register_quest() {
     budget.reset_default();
     let before = budget.cpu_instruction_cost();
 
-    client.register_quest(&quest_id, &creator, &token, &1_000i128, &verifier, &deadline);
+    client.register_quest(
+        &quest_id, &creator, &token, &1_000i128, &verifier, &deadline,
+    );
 
     let cost = budget.cpu_instruction_cost() - before;
     check_within_budget("register_quest", symbol_short!("reg_qst"), cost);
@@ -191,17 +202,14 @@ fn benchmark_summary() {
     println!("{}", "-".repeat(62));
 
     let rows = [
-        ("initialize",        284_753u64, 341_704u64, "init"),
-        ("register_quest",    341_268,    409_522,    "reg_qst"),
-        ("submit_proof",      386_946,    464_336,    "sub_prf"),
-        ("approve_submission",438_714,    526_457,    "appr_sub"),
-        ("claim_reward",      767_838,    921_406,    "clm_rwd"),
+        ("initialize", 284_753u64, 341_704u64, "init"),
+        ("register_quest", 341_268, 409_522, "reg_qst"),
+        ("submit_proof", 386_946, 464_336, "sub_prf"),
+        ("approve_submission", 438_714, 526_457, "appr_sub"),
+        ("claim_reward", 767_838, 921_406, "clm_rwd"),
     ];
     for (name, baseline, budget, sym) in rows {
-        println!(
-            "{:<20} {:>15} {:>15} {:>8}",
-            name, baseline, budget, sym
-        );
+        println!("{:<20} {:>15} {:>15} {:>8}", name, baseline, budget, sym);
     }
     println!("=============================================================\n");
 }
